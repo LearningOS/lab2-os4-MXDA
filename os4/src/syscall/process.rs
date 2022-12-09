@@ -31,9 +31,6 @@ pub fn sys_yield() -> isize {
     suspend_current_and_run_next();
     0
 }
-//fn VirtAddr2PhysAddr(va: VirtAddr) -> Option<PhysAddr> {
-//    
-//}
 
 // YOUR JOB: 引入虚地址后重写 sys_get_time
 pub fn sys_get_time(ts: *mut TimeVal, _tz: usize) -> isize {
@@ -47,23 +44,6 @@ pub fn sys_get_time(ts: *mut TimeVal, _tz: usize) -> isize {
         };
     }
     0
-    //println!("sys_get_time");
-    /*
-    let va = VirtAddr(ts as usize);
-    if let Some(pa) = VirtAddr2PhysAddr(va) {
-        let us = get_time_us();
-        let physAddr_ts = pa.0 as *mut TimeVal;
-        unsafe {
-            *physAddr_ts = TimeVal {
-                sec: us / 1_000_000,
-                usec: us % 1_000_000,
-            };
-        }
-        0
-    } else {
-        -1
-    }
-    */
 }
 
 // CLUE: 从 ch4 开始不再对调度算法进行测试~
@@ -92,20 +72,4 @@ pub fn sys_task_info(ti: *mut TaskInfo) -> isize {
         };
     }
     0
-    //println!("sys_task_info");
-    /*
-    if let Some(pa) = VirtAddr2PhysAddr(VirtAddr(ti as usize)) {
-        let pa_ti = pa.0 as *mut TaskInfo;
-        unsafe {
-        *pa_ti = TaskInfo {
-            status: get_current_task_status(),
-            syscall_times: get_syscall_times(),
-            time: (get_time_us() / 1000 - get_current_task_first_time()),
-            };
-            0
-        }
-    } else {
-        -1
-    }
-    */
 }
