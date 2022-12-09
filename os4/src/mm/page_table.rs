@@ -4,7 +4,7 @@ use super::{frame_alloc, FrameTracker, PhysPageNum, StepByOne, VirtAddr, VirtPag
 use alloc::vec;
 use alloc::vec::Vec;
 use bitflags::*;
-
+use crate::task::current_user_token;
 bitflags! {
     /// page table entry flags
     pub struct PTEFlags: u8 {
@@ -155,9 +155,18 @@ pub fn translated_byte_buffer(token: usize, ptr: *const u8, len: usize) -> Vec<&
     }
     v
 }
-pub fn VirtAddr2PhysAddr(token: usize, ptr: *const u8) -> usize {
-    let page_table = PageTable::from_token(token);
-    let mut va = VirtAddr::from(ptr as usize);
-    let ppn = page_table.find_pte(va.floor()).unwrap().ppn();
-    PhysAddr::from(ppn).0 + va.page_offset()
+pub fn VirtAddr2PhysAddr(va: VirtAddr) -> Option<PhysAddr> {
+    //let page_table = PageTable::from_token(token);
+    //let mut va = VirtAddr::from(ptr as usize);
+    //let ppn = page_table.find_pte(va.floor()).unwrap().ppn();
+    //PhysAddr::from(ppn).0 + va.page_offset()
+    let offset = va.page_offset();
+    let vpn = va.floor();
+    let ppn = PageTable::from_token(current_user_token()).translate(vpn).map(|entry| entry.ppn());
+    if let Some(ppn) = ppn {
+        let address = ppn.0 + offset;
+        Some(PhysAddr::from(address))
+    } else {
+        None
+    }
 }

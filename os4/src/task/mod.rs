@@ -231,7 +231,6 @@ impl TaskManager {
         }
         
         let vpn_range = VPNRange::new(start_vpn, end_vpn);
-        //memory_set.munmap(vpn_range);
         memory_set.munmap(vpn_range);
         0
     }
