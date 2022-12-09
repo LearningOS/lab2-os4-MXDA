@@ -37,9 +37,9 @@ pub fn sys_yield() -> isize {
 
 // YOUR JOB: 引入虚地址后重写 sys_get_time
 pub fn sys_get_time(ts: *mut TimeVal, _tz: usize) -> isize {
-    /*let _us = get_time_us();
+    let _us = get_time_us();
     let current_token = current_user_token();
-    let ts = VirtAddr2PhysAddr(current_token, _ts as *const u8) as *mut TimeVal;
+    let ts = VirtAddr2PhysAddr(current_token, ts as *const u8) as *mut TimeVal;
     unsafe {
         *ts = TimeVal {
             sec: _us / 1_000_000,
@@ -47,7 +47,8 @@ pub fn sys_get_time(ts: *mut TimeVal, _tz: usize) -> isize {
         };
     }
     0
-    */
+    //println!("sys_get_time");
+    /*
     let va = VirtAddr(ts as usize);
     if let Some(pa) = VirtAddr2PhysAddr(va) {
         let us = get_time_us();
@@ -62,6 +63,7 @@ pub fn sys_get_time(ts: *mut TimeVal, _tz: usize) -> isize {
     } else {
         -1
     }
+    */
 }
 
 // CLUE: 从 ch4 开始不再对调度算法进行测试~
@@ -80,7 +82,7 @@ pub fn sys_munmap(_start: usize, _len: usize) -> isize {
 
 // YOUR JOB: 引入虚地址后重写 sys_task_info
 pub fn sys_task_info(ti: *mut TaskInfo) -> isize {
-    /*let current_token = current_user_token();
+    let current_token = current_user_token();
     let _ti = VirtAddr2PhysAddr(current_token, ti as *const u8) as *mut TaskInfo;
     unsafe {
         *_ti = TaskInfo {
@@ -90,7 +92,8 @@ pub fn sys_task_info(ti: *mut TaskInfo) -> isize {
         };
     }
     0
-    */
+    //println!("sys_task_info");
+    /*
     if let Some(pa) = VirtAddr2PhysAddr(VirtAddr(ti as usize)) {
         let pa_ti = pa.0 as *mut TaskInfo;
         unsafe {
@@ -104,4 +107,5 @@ pub fn sys_task_info(ti: *mut TaskInfo) -> isize {
     } else {
         -1
     }
+    */
 }
